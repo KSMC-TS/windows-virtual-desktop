@@ -1,4 +1,4 @@
-param ([string]$workspace = "HCM-Workspace")
+param ([Parameter(Mandatory=$true)][string]$workspace)
 $workspacename = "$workspace (RD)"
 $appdatapath = "$env:appdata\Microsoft\Windows\Start Menu\Programs\$workspacename"
 $userdesktop = [Environment]::GetFolderPath("Desktop")
