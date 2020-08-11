@@ -49,6 +49,27 @@ Recommended keys:
 - PreventLoginWithTempProfile
 - (if migrating from existing deployment) DeleteLocalProfileWhenVHDShouldApply
 
+ADD SECTION ABOUT BLOB STORAGE
+
+Useful GPOs - Apply to WVD Servers OU:
+Session Limits
+- Computer Configuration\Policies\Administrative Templates\Windows Components\Remote Desktop Services\Remote Desktop Session Host\Session Time Limits
+    - Set time limit for active but idle Remote Desktop Services sessions [Enabled] ; [Idle Session Limit - 6 hrs]
+    - Set time limit for disconnected sessions [Enabled] ; [End a disconnected session - 2 days]
+    - Set time limit for logoff of RemoteApp sessions [Enabled] ; [RemoteApp session logoff delay - 6 hrs]
+
+RDS Licensing
+- Computer Configuration\Policies\Administrative Templates\Windows Components\Remote Desktop Services\Remote Desktop Session Host\Licensing
+    - Set the Remote Desktop licensing mode [Enabled] ; [Specify the licensing mode for the RD Session Host server - Per User]
+    - Use the specified Remote Desktop license servers [Enabled] ; [License servers to use - *RDS Licensing Server FQDN*]
+
+OPTIONAL - (only needed if using 2019 as file share. recommend storing scripts in blob storage)
+File Share Access for WVD Deployment 
+- Computer Configuration\Policies\Windows Settings\Security Settings\Local Policies\Security Options
+    - Accounts: Guest Account Status [Enabled]
+    - Network Access: Do not allow anonymous enumeration of SAM accounts and shares [Disabled]
+    - Network Access: Let Everyone permissions apply to anonymous users [Enabled]
+
 
 #### Setting up Service Accounts, Admin tool
 
@@ -61,6 +82,10 @@ Important to note: All of these tasks can be accomplished manually in the Azure 
 [WVD Admin](https://blog.itprocloud.de/Windows-Virtual-Desktop-Admin/)
 
 - Follow the instructions to create AzureAD Service Account for WVD Admin and assign appropriate permissions/roles
+    - New App Registration
+    - Assign API permissions 
+    - Assign roles on RG and VNET
+    - Make sure 'Microsoft.DesktopVirtualization' provider is registerd on subscription
 
 - This service account will be used to make changes through the app. Follow the instructions to configure connection to client’s Azure tenant using the service account. 
 
